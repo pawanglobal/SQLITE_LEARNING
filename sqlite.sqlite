@@ -1,0 +1,370 @@
+# to read a file
+SELECT * FROM file_name
+
+# to create a tabel
+CREATE TABLE table_name (
+   column_1 data_type, 
+   column_2 data_type, 
+   column_3 data_type
+);
+
+#e.g
+ CREATE TABLE celebs (
+   id INTEGER, 
+   name TEXT, 
+   age INTEGER
+);
+
+# TO INSERT VALAUES
+# REMEBER YOU HAVE TO TYPE THE FULL CODE TO INSERT THE EACH VALUE
+
+INSERT INTO celebs (id, name, age) 
+VALUES (1, 'Justin Bieber', 22);
+
+INSERT INTO celebs (id, name, age) 
+VALUES (2, 'Beyonce Knowles', 33); 
+ 
+INSERT INTO celebs (id, name, age) 
+VALUES (3, 'Jeremy Lin', 26); 
+ 
+INSERT INTO celebs (id, name, age) 
+VALUES (4, 'Taylor Swift', 26);
+
+#SELECT MANIPULATION
+# give you the name column
+
+SELECT name FROM celebs;
+
+# Alter, to add new column
+
+ALTER TABLE celebs 
+ADD COLUMN twitter_handle TEXT;
+
+# to update a value in a table
+
+#UPDATE celebs 
+SET twitter_handle = '@taylorswift13' 
+WHERE id = 4;
+
+# delete 
+DELETE FROM celebs
+WHERE twitter_handle is NULL;
+
+# constraints
+CREATE TABLE celebs (
+   id INTEGER PRIMARY KEY, 
+   name TEXT UNIQUE,
+   date_of_birth TEXT NOT NULL,
+   date_of_death TEXT DEFAULT 'Not Applicable'
+);
+
+# As
+# to rename a table or column
+
+SELECT name AS 'Titles'
+FROM movies;
+
+# Distinct
+# to get all the distinct values 
+
+SELECT DISTINCT genre 
+FROM movies;
+
+# Where - very very important
+# to restrict our search
+
+SELECT * 
+FROM movies 
+WHERE imdb_rating < 5;
+
+# to compare values
+SELECT * 
+FROM movies
+WHERE name LIKE 'Se_en';
+
+#like2
+# % to grab the particular elements
+# A% to start with A, %A to end with A,
+
+SELECT * 
+FROM movies
+WHERE name LIKE '%man%';
+
+# Is NULL
+SELECT name
+FROM movies 
+WHERE imdb_rating IS NOT NULL;
+
+SELECT name
+FROM movies 
+WHERE imdb_rating IS NULL;
+
+#Between
+#The BETWEEN operator is used in a WHERE clause to filter the result set within a certain range
+
+SELECT *
+FROM movies
+WHERE year BETWEEN 1990 AND 1999;
+
+SELECT *
+FROM movies
+WHERE name BETWEEN 'A' AND 'J';
+
+# AND
+#both included
+
+SELECT * 
+FROM movies
+WHERE year BETWEEN 1990 AND 1999
+   AND genre = 'romance';
+
+SELECT *
+FROM movies
+WHERE year < 1985
+   AND genre = 'horror';
+
+# Or
+
+SELECT *
+FROM movies
+WHERE year > 2014
+   OR genre = 'action';
+
+SELECT *
+FROM movies
+WHERE genre = 'romance'
+   OR genre = 'comedy';
+
+
+# Order By
+# We can sort the results using ORDER BY
+
+SELECT *
+FROM movies
+ORDER BY name;
+
+SELECT *
+FROM movies
+WHERE imdb_rating > 8
+ORDER BY year DESC;
+
+SELECT name, year
+FROM movies
+ORDER BY name;
+
+select name, year, imdb_rating
+from movies
+order by imdb_rating desc;
+
+#limit
+# to cap the number of rows in the result.
+
+select *
+from movies
+order by imdb_rating desc
+limit 3; 
+
+#case
+A CASE statement allows us to create different outputs (usually in the SELECT statement). It is SQL’s way of handling if-then logic
+
+SELECT name,
+ CASE
+  WHEN imdb_rating > 8 THEN 'Fantastic'
+  WHEN imdb_rating > 6 THEN 'Poorly Received'
+  ELSE 'Avoid at All Costs'
+ END
+FROM movies;
+
+SELECT name,
+ CASE
+  WHEN genre = 'romance' THEN 'Chill'
+  WHEN genre = 'comedy'  THEN 'Chill'
+  ELSE 'Intense'
+ END AS 'Mood'
+FROM movies;
+
+# count
+#The fastest way to calculate how many rows are in a table is to use the COUNT() function.
+
+SELECT COUNT(*) 
+FROM fake_apps;
+
+SELECT COUNT(*) 
+FROM fake_apps
+WHERE price = 0;
+
+#Sum
+SQL makes it easy to add all values in a particular column using SUM().
+
+SELECT SUM(downloads)
+FROM fake_apps;
+
+
+#Max / Min
+The MAX() and MIN() functions return the highest and lowest values in a column, respectively.
+
+SELECT MAX(downloads)
+FROM fake_apps;
+
+SELECT MIN(downloads)
+FROM fake_apps;
+
+#Average
+SQL uses the AVG() function to quickly calculate the average value of a particular column.
+
+SELECT AVG(downloads)
+FROM fake_apps;
+
+#Round
+By default, SQL tries to be as precise as possible without rounding. We can make the result table easier to read using the ROUND() function.
+
+SELECT ROUND(price, 0)
+FROM fake_apps;
+
+SELECT name, ROUND(price, 0)
+FROM fake_apps;
+
+SELECT ROUND(AVG(price), 2)
+FROM fake_apps;
+
+#Group By I
+Oftentimes, we will want to calculate an aggregate for data with certain characteristics.
+
+SELECT AVG(imdb_rating)
+FROM movies
+WHERE year = 1999;
+
+SELECT AVG(imdb_rating)
+FROM movies
+WHERE year = 2000;
+ 
+SELECT AVG(imdb_rating)
+FROM movies
+WHERE year = 2001;
+
+same in one step
+
+SELECT year,
+   AVG(imdb_rating)
+FROM movies
+GROUP BY year
+ORDER BY year;
+
+SELECT category, SUM(downloads)
+FROM fake_apps
+GROUP BY category;
+
+#/Group By II
+Sometimes, we want to GROUP BY a calculation done on a column.
+
+SELECT category, 
+   price,
+   AVG(downloads)
+FROM fake_apps
+GROUP BY category, price;
+
+SELECT category, 
+   price,
+   AVG(downloads)
+FROM fake_apps
+GROUP BY 1, 2;
+
+# having
+We can’t use WHERE here because we don’t want to filter the rows; we want to filter groups.
+
+SELECT price, 
+   ROUND(AVG(downloads)),
+   COUNT(*)
+FROM fake_apps
+GROUP BY price
+HAVING COUNT(*) > 10;
+
+# combining tables 
+
+SELECT orders.order_id,
+   customers.customer_name
+FROM orders
+JOIN customers
+  ON orders.customer_id = customers.customer_id;
+
+SELECT *
+FROM orders
+JOIN subscriptions
+  ON orders.subscription_id = subscriptions.subscription_id;
+
+SELECT *
+FROM orders
+JOIN subscriptions
+  ON orders.subscription_id = subscriptions.subscription_id;
+ 
+-- Checkpoint 2
+ 
+SELECT *
+FROM orders
+JOIN subscriptions
+  ON orders.subscription_id = subscriptions.subscription_id
+WHERE subscriptions.description = 'Fashion Magazine';
+
+#Left Joins
+What if we want to combine two tables and keep some of the un-matched rows?
+
+SELECT *
+FROM newspaper
+LEFT JOIN online
+  ON newspaper.id = online.id
+WHERE online.id IS NULL;
+
+#primary key vs foreign key
+
+#cross Joins
+SELECT shirts.shirt_color,
+   pants.pants_color
+FROM shirts
+CROSS JOIN pants;
+
+SELECT COUNT(*)
+FROM newspaper
+WHERE start_month <= 3 
+  AND end_month >= 3;
+  
+SELECT *
+FROM newspaper
+CROSS JOIN months;
+
+SELECT *
+FROM newspaper
+CROSS JOIN months
+WHERE start_month <= month 
+  AND end_month >= month;
+
+SELECT month, 
+  COUNT(*)
+FROM newspaper
+CROSS JOIN months
+WHERE start_month <= month 
+  AND end_month >= month
+GROUP BY month;
+
+#Union
+Sometimes we just want to stack one dataset on top of the other. Well, the UNION operator allows us to do that.
+
+SELECT * 
+FROM newspaper 
+UNION 
+SELECT * 
+FROM online;
+
+# With
+Often times, we want to combine two tables, but one of the tables is the result of another calculation.
+
+WITH previous_query AS (
+   SELECT customer_id,
+      COUNT(subscription_id) AS 'subscriptions'
+   FROM orders
+   GROUP BY customer_id
+)
+SELECT customers.customer_name, 
+   previous_query.subscriptions
+FROM previous_query
+JOIN customers
+  ON previous_query.customer_id = customers.customer_id;
